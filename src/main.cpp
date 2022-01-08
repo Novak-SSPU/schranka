@@ -5,8 +5,8 @@
 #define Hall_sensor 35
 int Val1 = 0;
 
-const char *ssid = "NOVACI_WIFI"; //Název Wi-fi
-const char *password = "K@TK@&F1L1P&KUB1K"; //heslo na Wi-fi
+const char *wifi_jmeno = "NOVACI_WIFI"; //Název Wi-fi
+const char *heslo = "K@TK@&F1L1P&KUB1K"; //heslo na Wi-fi
 
 // Nastavení pro bota
 #define BOTtoken "2107324741:AAELdq0KJMGP6mD7PMTysN3Lx1Afgvswpks" //Telegram ID mojeho bota
@@ -36,7 +36,7 @@ void handleNewMessages(int numNewMessages)
     String chat_id = String(bot.messages[i].chat_id);
     if (chat_id != CHAT_ID)
     {
-      bot.sendMessage(chat_id, "Unauthorized user", "");
+      bot.sendMessage(chat_id, "Neznámý uživatel", "");
       continue;
     }
 
@@ -93,7 +93,7 @@ void setup()
 
   // Připojování k Wi-fi
   WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
+  WiFi.begin(wifi_jmeno, heslo);
 #ifdef ESP32
   client.setCACert(TELEGRAM_CERTIFICATE_ROOT); // Přidání kořenového certifikátu pro api.telegram.org
 #endif
