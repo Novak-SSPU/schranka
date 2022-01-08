@@ -5,7 +5,7 @@
 #define Hall_sensor 35
 int Val1 = 0;
 
-const char *wifi_jmeno = "NOVACI_WIFI"; //Název Wi-fi
+const char *wifi_jmeno = "NOVACI_WIFI";  //Název Wi-fi
 const char *heslo = "K@TK@&F1L1P&KUB1K"; //heslo na Wi-fi
 
 // Nastavení pro bota
@@ -46,39 +46,23 @@ void handleNewMessages(int numNewMessages)
 
     String from_name = bot.messages[i].from_name;
 
-    if (text == "/start")
+    if (text == "/start") //bot při zprávě /start pošle následující zprávu
     {
       String welcome = "Ahoj, " + from_name + "e.\n";
-      welcome += "Použij následující příkazy pro ovládání bota\n\n";
-      welcome += "/led_on pro zapnutí LEDky \n";
-      welcome += "/led_off pro vypnutí LEDky \n";
-      welcome += "/state pro momentální stav LEDky \n";
+      welcome += "Použij následující příkazy pro ovládání bota\n";
+      welcome += "/state pro momentální stav schránky.\n";
       bot.sendMessage(chat_id, welcome, "");
     }
 
-    if (text == "/led_on")
+    if (text == "/state") //bot podle hodnoty Hallova senzoru pošle zprávu o stavu schránky
     {
-      bot.sendMessage(chat_id, "Zapínám LEDku", "");
-      ledState = HIGH;
-      digitalWrite(ledPin, ledState);
-    }
-
-    if (text == "/led_off")
-    {
-      bot.sendMessage(chat_id, "Vypínám LEDku", "");
-      ledState = LOW;
-      digitalWrite(ledPin, ledState);
-    }
-
-    if (text == "/state")
-    {
-      if (digitalRead(ledPin))
+      if (digitalRead(Val1))
       {
-        bot.sendMessage(chat_id, "LEDka je zapnutá", "");
+        bot.sendMessage(chat_id, "Schránka je otevřená", "");
       }
       else
       {
-        bot.sendMessage(chat_id, "LED je vypnutá", "");
+        bot.sendMessage(chat_id, "Schránka je zavřená", "");
       }
     }
   }
@@ -106,24 +90,37 @@ void setup()
   Serial.println(WiFi.localIP());
 
   pinMode(Hall_sensor, INPUT);
+}
+void zprava(int value)
+{
+  String chat_id = CHAT_ID;
+  if (value == 0)
+  {
+    bot.sendMessage(chat_id, "Schránka se zavřela", "");
+    delay(5000);
   }
+}
 
 void loop()
 {
+
   if (millis() > lastTimeBotRan + botRequestDelay)
   {
     int numNewMessages = bot.getUpdates(bot.last_message_received + 1);
-    
-    while (numNewMessages) 
-    { 
+
+    while (numNewMessages)
+    {
       Serial.println("got response");
       handleNewMessages(numNewMessages);
       numNewMessages = bot.getUpdates(bot.last_message_received + 1);
     }
     lastTimeBotRan = millis();
   }
-  Val1=digitalRead(Hall_sensor);            //Čtení a zapsání hodnoty Z Hallova sensoru
-   Serial.print(Val1);
-   Serial.print("\t");
-   delay(1000);
+
+  Val1 = digitalRead(Hall_sensor); //Čtení a zapsání hodnoty Z Hallova sensoru
+  Serial.print(Val1);
+  Serial.print("\t");
+  delay(1000);
+
+  zprava(Val1);
 }
