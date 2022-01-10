@@ -1,8 +1,8 @@
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
-#include <UniversalTelegramBot.h> // Knihovna pro Telegram bota od Brian Lough: https://github.com/witnessmenow/Universal-Arduino-Telegram-Bot
+#include <UniversalTelegramBot.h> // Knihovna pro Telegram bota od Briana Lougha: https://github.com/witnessmenow/Universal-Arduino-Telegram-Bot
 #include <ArduinoJson.h>
-#define Hall_sensor 35
+#define Hall_sensor 35 //definace pinů pro Hallovy sensory
 #define Hall_sensor2 34
 int Hal1 = 0;
 int Hal2= 0;
