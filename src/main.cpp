@@ -23,16 +23,13 @@ UniversalTelegramBot bot(BOTtoken, client);
 int botRequestDelay = 1000;
 unsigned long lastTimeBotRan;
 
-const int ledPin = 2;
-bool ledState = LOW;
-
 // Pracuje s novými zprávami.
-void handleNewMessages(int numNewMessages)
+void noveZpravy(int pocetNovychZprav)
 {
-  Serial.println("handleNewMessages");
-  Serial.println(String(numNewMessages));
+  Serial.println("noveZpravy");
+  Serial.println(String(pocetNovychZprav));
 
-  for (int i = 0; i < numNewMessages; i++)
+  for (int i = 0; i < pocetNovychZprav; i++)
   {
     // Kontroluje správnost uživatelského ID
     String chat_id = String(bot.messages[i].chat_id);
@@ -74,9 +71,6 @@ void setup()
 {
   Serial.begin(115200);
 
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, ledState);
-
   // Připojování k Wi-fi
   WiFi.mode(WIFI_STA);
   WiFi.begin(wifi_jmeno, heslo);
@@ -86,7 +80,7 @@ void setup()
     delay(1000);
     Serial.println("Připojování se k WiFi..");
   }
-  // Print ESP32 Local IP Address
+  // Vypíše lokální IP adresu ESP
   Serial.println(WiFi.localIP());
 
   pinMode(Hall_sensor, INPUT);
@@ -117,13 +111,13 @@ void loop()
 
   if (millis() > lastTimeBotRan + botRequestDelay)
   {
-    int numNewMessages = bot.getUpdates(bot.last_message_received + 1);
+    int pocetNovychZprav = bot.getUpdates(bot.last_message_received + 1);
 
-    while (numNewMessages)
+    while (pocetNovychZprav)
     {
       Serial.println("got response");
-      handleNewMessages(numNewMessages);
-      numNewMessages = bot.getUpdates(bot.last_message_received + 1);
+      noveZpravy(pocetNovychZprav);
+      pocetNovychZprav = bot.getUpdates(bot.last_message_received + 1);
     }
     lastTimeBotRan = millis();
   }
