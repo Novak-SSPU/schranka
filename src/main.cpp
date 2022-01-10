@@ -4,8 +4,8 @@
 #include <ArduinoJson.h>
 #define Hall_sensor 35
 #define Hall_sensor2 34
-int Val1 = 0;
-int Val2= 0;
+int Hal1 = 0;
+int Hal2= 0;
 
 const char *wifi_jmeno = "NOVACI_WIFI";  //Název Wi-fi
 const char *heslo = "K@TK@&F1L1P&KUB1K"; //heslo na Wi-fi
@@ -58,7 +58,7 @@ void handleNewMessages(int numNewMessages)
 
     if (text == "/stav") //bot podle hodnoty Hallova senzoru pošle zprávu o stavu schránky
     {
-      if (digitalRead(Val1))
+      if (digitalRead(Hal1))
       {
         bot.sendMessage(chat_id, "Schránka je otevřená", "");
       }
@@ -80,9 +80,7 @@ void setup()
   // Připojování k Wi-fi
   WiFi.mode(WIFI_STA);
   WiFi.begin(wifi_jmeno, heslo);
-#ifdef ESP32
   client.setCACert(TELEGRAM_CERTIFICATE_ROOT); // Přidání kořenového certifikátu pro api.telegram.org
-#endif
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(1000);
@@ -130,16 +128,16 @@ void loop()
     lastTimeBotRan = millis();
   }
 
-  Val1 = digitalRead(Hall_sensor); //Čtení a zapsání hodnoty Z Hallova sensoru
-  Val2 = digitalRead(Hall_sensor2);
-  Serial.print(Val1);
+  Hal1 = digitalRead(Hall_sensor); //Čtení a zapsání hodnoty Z Hallova sensoru
+  Hal2 = digitalRead(Hall_sensor2);
+  Serial.print(Hal1);
   Serial.print("\t");
-  Serial.print(Val2);
+  Serial.print(Hal2);
   Serial.print("\t");
   delay(1000);
 
-  postaIn(Val1);
-  postaOut(Val2);
+  postaIn(Hal1);
+  postaOut(Hal2);
 
 
 }
